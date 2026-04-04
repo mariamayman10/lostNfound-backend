@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, send_from_directory
 from marshmallow import ValidationError
 from .schema import ReportSchema, CreateReportSchema, UpdateReportSchema
+from ..auth.decorators import require_auth
 import os
 
 reports_routes = Blueprint('reports', __name__, url_prefix='/reports')
