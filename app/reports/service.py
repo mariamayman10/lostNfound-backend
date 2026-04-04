@@ -3,6 +3,7 @@ from app import Config
 from app.extensions import get_db
 from app.globalHelpers import save_image, move_file
 from .schema import ReportSchema, GetReportSchema
+from ..users.service import get_user_by_id
 from google.cloud.firestore_v1 import Increment
 
 report_schema = ReportSchema()
@@ -52,6 +53,17 @@ def create_report_service(report, images, user_id):
             if temp_filepaths and os.path.exists(temp_filepath):
                 os.remove(temp_filepath)
         raise e
+
+def get_report_service(report_id, uid):
+    doc = get_db().collection('reports').document(report_id).get()
+    if not doc.exists:
+        raise ValueError("Report not found")
+    report = doc.to_dict()
+    report['id'] = doc.id
+    report['userName'] = get_user_by_id(report.get('userId'))["name"]
+    report['isOwner'] = report["userId"] == uid
+    return report
+
 def get_reports_service(params):
     query = get_db().collection("reports")
     if "type" in params:
