@@ -52,3 +52,40 @@ def create_report_service(report, images, user_id):
             if temp_filepaths and os.path.exists(temp_filepath):
                 os.remove(temp_filepath)
         raise e
+def get_reports_service(params):
+    query = get_db().collection("reports")
+    if "type" in params:
+        query = query.where("type", "==", params["type"])
+    if "status" in params:
+        query = query.where("status", "==", params["status"])
+    category_filter = params.get("category", "").lower()
+    location_filter = params.get("location", "").lower()
+    title_filter = params.get("title", "").lower()
+
+    docs = query.stream()
+    reports = []
+    for doc in docs:
+        data = doc.to_dict()
+        data["id"] = doc.id
+        title = data.get("title", "").lower()
+        location = data.get("location", "").lower()
+        category = data.get("category", "").lower()
+        if category_filter and category_filter not in category:
+            continue
+        if title_filter and title_filter not in title:
+            continue
+        if location_filter and location_filter not in location:
+            continue
+        reports.append(data)
+
+    return get_report_schema.dump(reports, many=True)
+
+def get_my_reports_service(user_id):
+    docs = get_db().collection("reports").where("userId", "==", user_id).stream()
+    my_reports = []
+    for doc in docs:
+        data = doc.to_dict()
+        data["id"] = doc.id
+        my_reports.append(data)
+    return get_report_schema.dump(my_reports, many=True)
+
