@@ -5,12 +5,27 @@ from .helpers import send_email
 from app.globalHelpers import save_image, move_file
 from app.config import Config
 from app.extensions import get_db
+
+
+
 user_schema = UserSchema()
+
+def prepare_email(user):
+    link = auth.generate_email_verification_link(
+        user.email,
+        action_code_settings=auth.ActionCodeSettings(
+            url=f"{Config.FRONTEND_URL}/verify?uid={user.uid}",
+            handle_code_in_app = False
+        )
+    )
+    send_email(user.email, link)
+
 def save_user(user_data):
     user = auth.create_user(
         email=user_data['email'],
         password=user_data['password']
     )
+    prepare_email(user)
     firebase_user = {
         "name": user_data['name'],
         "email": user_data['email'],
@@ -22,6 +37,7 @@ def save_user(user_data):
     }
     get_db().collection('users').document(user.uid).set(firebase_user)
     return firebase_user, user.uid
+
 def register_service(user_data, profile_picture):
     temp_filepath = None
     try:
