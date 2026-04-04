@@ -4,6 +4,7 @@ from app.extensions import get_db
 from app.globalHelpers import save_image, move_file
 from .schema import ReportSchema, GetReportSchema
 from ..users.service import get_user_by_id
+from ..comments.service import get_report_comments
 from google.cloud.firestore_v1 import Increment
 
 report_schema = ReportSchema()
@@ -62,6 +63,7 @@ def get_report_service(report_id, uid):
     report['id'] = doc.id
     report['userName'] = get_user_by_id(report.get('userId'))["name"]
     report['isOwner'] = report["userId"] == uid
+    report['comments'] = get_report_comments(report_id)
     return report
 
 def get_reports_service(params):
