@@ -105,12 +105,8 @@ Frontend: https://github.com/mariamayman10/lostNfound-frontend
 ## Installation and Setup
 
 ```bash
-git clone <backend-repository-url>
+git clone https://github.com/mariamayman10/lostNfound-backend
 cd backend
-python -m venv venv
-venv\Scripts\activate      # Windows
-source venv/bin/activate   # macOS/Linux
-pip install -r requirements.txt
 flask run
 ```
 ### Create a .env file:
