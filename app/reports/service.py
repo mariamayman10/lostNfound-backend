@@ -101,3 +101,14 @@ def get_my_reports_service(user_id):
         my_reports.append(data)
     return get_report_schema.dump(my_reports, many=True)
 
+def update_report_service(report_id, data, user_id):
+    doc = get_db().collection("reports").document(report_id).get()
+    if not doc.exists:
+        raise Exception("Report not found")
+    if doc.to_dict()["userId"] != user_id:
+        raise Exception("You are not the owner of the report")
+    if doc.to_dict()["status"] == "closed":
+        raise Exception("Report is closed")
+    get_db().collection("reports").document(report_id).update(data)
+    report = get_db().collection("reports").document(report_id).get().to_dict()
+    return report_schema.dump(report)

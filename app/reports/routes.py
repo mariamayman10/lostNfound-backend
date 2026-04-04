@@ -44,6 +44,16 @@ def create_report():
 @reports_routes.route('/<id>', methods=['PUT'])
 @require_auth
 def update_report(id):
+    try:
+        user_id = request.user["uid"]  # type: ignore
+        data = update_report_schema.load(request.json)
+        report = update_report_service(id, data, user_id)
+        return jsonify(report), 200
+    except Exception as e:
+        return jsonify({"errorMsg": str(e)}), 400
+    except ValidationError as e:
+        return jsonify({"errorMsg": str(e)}), 400
+
 
 @reports_routes.route('/<id>', methods=['GET'])
 @require_auth
