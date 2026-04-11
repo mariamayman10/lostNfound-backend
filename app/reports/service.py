@@ -6,6 +6,7 @@ from .schema import ReportSchema, GetReportSchema
 from ..users.service import get_user_by_id
 from ..comments.service import get_report_comments
 from google.cloud.firestore_v1 import Increment
+from google.cloud import firestore
 
 report_schema = ReportSchema()
 get_report_schema = GetReportSchema()
@@ -67,11 +68,18 @@ def get_report_service(report_id, uid):
     return report
 
 def get_reports_service(params):
+    print(params)
     query = get_db().collection("reports")
     if "type" in params:
         query = query.where("type", "==", params["type"])
     if "status" in params:
         query = query.where("status", "==", params["status"])
+    if "sortby" in params:
+        if params["sortby"] == "asc":
+            order = firestore.Query.ASCENDING
+        else:
+            order = firestore.Query.DESCENDING
+        query = query.order_by("createdAt", direction=order)
     category_filter = params.get("category", "").lower()
     location_filter = params.get("location", "").lower()
     title_filter = params.get("title", "").lower()
