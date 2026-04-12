@@ -85,6 +85,7 @@ def login_service(login_data):
         "idToken": id_token,
         "refreshToken": data["refreshToken"],
         "expiresIn": data["expiresIn"],
+        "userId": firebase_uid,
         "name": user_data['name'],
         "email": user_data['email'],
         "phoneNumber": user_data['phoneNumber'],
