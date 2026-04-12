@@ -7,6 +7,7 @@ from .auth.routes import auth_routes
 from .reports.routes import reports_routes
 from .users.routes import users_routes
 from .comments.routes import comments_routes
+from .feedbacks.routes import feedback_routes
 import os
 
 def create_app():
@@ -30,5 +31,6 @@ def create_app():
   app.register_blueprint(reports_routes)
   app.register_blueprint(users_routes)
   app.register_blueprint(comments_routes)
+  app.register_blueprint(feedback_routes)
 
   return app
