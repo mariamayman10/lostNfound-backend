@@ -25,7 +25,8 @@ def create_feedback():
 @feedback_routes.route('', methods=['GET'])
 def get_feedbacks():
     try:
-        feedbacks = get_feedbacks_service()
+        params = request.args.to_dict()
+        feedbacks = get_feedbacks_service(params)
         return jsonify(feedbacks), 200
     except Exception as e:
         return jsonify({

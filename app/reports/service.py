@@ -68,7 +68,6 @@ def get_report_service(report_id, uid):
     return report
 
 def get_reports_service(params):
-    print(params)
     query = get_db().collection("reports")
     if "type" in params:
         query = query.where("type", "==", params["type"])

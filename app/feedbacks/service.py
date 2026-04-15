@@ -19,9 +19,9 @@ def create_feedback_service(feedback, user_id):
     except Exception as e:
         raise Exception('Failed to create feedback')
 
-def get_feedbacks_service():
+def get_feedbacks_service(params):
     try:
-        docs = get_db().collection("feedbacks").order_by("createdAt", direction=firestore.Query.DESCENDING).limit(3).stream()
+        docs = get_db().collection("feedbacks").order_by("createdAt", direction=firestore.Query.DESCENDING).limit(int(params["limit"])).stream()
         feedbacks = []
         user_cache = {}
 
