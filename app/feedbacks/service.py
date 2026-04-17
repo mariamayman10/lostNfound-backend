@@ -54,5 +54,4 @@ def get_feedbacks_service(params):
         return feedbacks
 
     except Exception as e:
-        print("ERROR:", e)
         raise Exception("Failed to fetch feedbacks")

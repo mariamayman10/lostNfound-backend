@@ -16,8 +16,11 @@ def create_comment():
         comment_data = comments_schema.load(request.json)
         comment = create_comment_service(comment_data, user_id)
         return jsonify(comment), 201
-    except ValueError:
-        return jsonify({'errorMsg': 'Invalid JSON format'}), 400
-    except ValidationError:
-        return jsonify({'errorMsg': 'Invalid JSON format'}), 400
+    except ValueError as e:
+        return jsonify({'errorMsg': str(e)}), 400
+    except ValidationError as e:
+        return jsonify({
+            "errorMsg": "Validation error",
+            "errors": e.messages
+        }), 400
 

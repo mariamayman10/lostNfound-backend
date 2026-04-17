@@ -52,7 +52,10 @@ def update_report(id):
     except Exception as e:
         return jsonify({"errorMsg": str(e)}), 400
     except ValidationError as e:
-        return jsonify({"errorMsg": str(e)}), 400
+        return jsonify({
+            "errorMsg": "Validation error",
+            "errors": e.messages
+        }), 400
 
 
 @reports_routes.route('/<id>', methods=['GET'])

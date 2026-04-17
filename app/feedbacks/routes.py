@@ -21,6 +21,10 @@ def create_feedback():
             "errorMsg": "Validation error",
             "errors": e.messages
         }), 400
+    except ValueError as e:
+        return jsonify({"errorMsg": str(e)}), 400
+    except Exception as e:
+        return jsonify({"errorMsg": str(e)}), 500
 
 @feedback_routes.route('', methods=['GET'])
 def get_feedbacks():
